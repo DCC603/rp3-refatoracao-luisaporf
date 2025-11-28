@@ -25,13 +25,13 @@ public class Conta {
     }
 
     public void depositar(double valor) {
-        Operacao op = new Operacao('d', valor);
+        Operacao op = new Operacao(TipoOperacao.DEPOSITO, valor);
         this.operacoes.add(op);
         this.saldo += valor;
     }
 
     public void sacar(double valor) {
-        Operacao op = new Operacao('s', valor);
+        Operacao op = new Operacao(TipoOperacao.SAQUE, valor);
         this.operacoes.add(op);
         this.saldo -= valor;
     }
@@ -43,17 +43,21 @@ public class Conta {
             sacar(valor);
     }
 
+    private String gerarExtrato() {
+        String extrato = "";
+        for(Operacao op : this.operacoes) {
+            extrato += op.toString() + "\n";
+        }
+        return extrato;
+    }
+
     public String toString() {
         String dadosCliente = this.cliente.toString();
 
         String dadosConta = String.format("%s\nConta: %d\nSaldo: %.2f",
                 this.agencia.toString(), this.numConta, this.saldo);
 
-        // TODO(#5) REFATORAR: Essa operação não deveria estar sendo realizada neste método
-        String dadosExtrato = "";
-        for(Operacao op : this.operacoes) {
-            dadosExtrato += op.toString() + "\n";
-        }
+        String dadosExtrato = gerarExtrato();
 
         return "-----CLIENTE-----\n" +
                 dadosCliente +
